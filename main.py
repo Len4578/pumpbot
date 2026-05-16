@@ -3,7 +3,7 @@ import json
 import requests
 import websockets
 
-TELEGRAM_TOKEN = "8831499845:AAE3ZAVFCiU1db1-19nY6YjeHIYhBStHEXY"
+TELEGRAM_TOKEN = "8107971895:AAEyZCHy5n0t1VVYkNp04mcZfm0YEhjPaf0"
 TELEGRAM_CHAT_ID = "7175890846"
 
 def send_telegram(msg):
@@ -17,34 +17,25 @@ def send_telegram(msg):
         print(f"Telegram error: {e}")
 
 async def main():
-    send_telegram("Bot started!")
+    send_telegram("✅ Bot started!")
     print("Bot started!")
-    PUMP_WS = "wss://frontend-api.pump.fun/realtime"
+    PUMP_WS = "wss://pumpportal.fun/api/data"
     while True:
         try:
             print("Connecting to pump.fun...")
-            async with websockets.connect(
-                PUMP_WS,
-                ping_interval=20,
-                ping_timeout=10,
-                extra_headers={
-                    "User-Agent": "Mozilla/5.0",
-                    "Origin": "https://pump.fun"
-                }
-            ) as ws:
+            async with websockets.connect(PUMP_WS) as ws:
                 await ws.send(json.dumps({"method": "subscribeNewToken"}))
-                send_telegram("Connected to pump.fun!")
+                send_telegram("🔌 Connected! Watching for new tokens...")
                 print("Connected!")
                 async for msg in ws:
                     data = json.loads(msg)
-                    if data.get("txType") == "create":
-                        symbol = data.get("symbol", "???")
-                        name = data.get("name", "Unknown")
-                        print(f"New token: {symbol}")
-                        send_telegram(f"New token: {symbol} ({name})")
+                    symbol = data.get("symbol", "???")
+                    name = data.get("name", "Unknown")
+                    mint = data.get("mint", "")
+                    print(f"New token: {symbol}")
+                    send_telegram(f"🆕 {symbol} ({name})\nMint: {mint[:20]}...")
         except Exception as e:
             print(f"Error: {e}")
-            send_telegram(f"Reconnecting...")
             await asyncio.sleep(5)
 
 asyncio.run(main())

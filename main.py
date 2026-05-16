@@ -3,7 +3,7 @@ import json
 import requests
 import websockets
 
-TELEGRAM_TOKEN =8831499845:AAG2je5Zgh9Mv8OkPbW9nFK0jri-9m81rE8 "YOUR_NEW_TOKEN_HERE"
+TELEGRAM_TOKEN = 8831499845:AAE3ZAVFCiU1db1-19nY6YjeHIYhBStHEXY"REPLACE_WITH_TOKEN"
 TELEGRAM_CHAT_ID = "7175890846"
 
 def send_telegram(msg):
@@ -17,19 +17,19 @@ def send_telegram(msg):
         pass
 
 async def main():
-    send_telegram("✅ Bot started!")
+    send_telegram("Bot started on Render!")
     PUMP_WS = "wss://frontend-api.pump.fun/realtime"
     while True:
         try:
             async with websockets.connect(PUMP_WS, ping_interval=None) as ws:
                 await ws.send(json.dumps({"method": "subscribeNewToken"}))
-                send_telegram("🔌 Connected to pump.fun!")
+                send_telegram("Connected to pump.fun!")
                 async for msg in ws:
                     data = json.loads(msg)
                     if data.get("txType") == "create":
                         symbol = data.get("symbol", "???")
                         name = data.get("name", "Unknown")
-                        send_telegram(f"🆕 {symbol} ({name})")
+                        send_telegram(f"New token: {symbol} ({name})")
         except Exception as e:
             await asyncio.sleep(5)
 

@@ -3,7 +3,7 @@ import json
 import requests
 import websockets
 
-TELEGRAM_TOKEN = 8831499845:AAG2je5Zgh9Mv8OkPbW9nFK0jri-9m81rE8"YOUR_NEW_TOKEN"
+TELEGRAM_TOKEN =8831499845:AAG2je5Zgh9Mv8OkPbW9nFK0jri-9m81rE8 "YOUR_NEW_TOKEN_HERE"
 TELEGRAM_CHAT_ID = "7175890846"
 
 def send_telegram(msg):
